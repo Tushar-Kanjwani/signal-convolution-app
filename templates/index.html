@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signal Convolution Visualizer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #eef2f3;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #0c3c78;
+        }
+        p {
+            text-align: justify;
+            color: #333;
+            line-height: 1.6;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+        }
+        input, select {
+            padding: 10px;
+            width: 100%;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            padding: 12px 24px;
+            background: #0c3c78;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0b2f5c;
+        }
+        img {
+            margin-top: 30px;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Signal Convolution Visualizer</h1>
+        <p>
+            This interactive visualization tool demonstrates a fundamental concept in <strong>Signal and Systems</strong> — the convolution of two continuous-time signals.
+            Convolution is a mathematical operation that blends one signal with another, describing how the shape of one is modified by the other.
+            It is essential in signal processing, system analysis, and many areas of electrical engineering.
+            Use the options below to experiment with different signal types and observe how their convolution behaves.
+        </p>
+
+        <form method="post" oninput="toggleFields()">
+            <h2>Signal Inputs</h2>
+
+            <label for="x_type">Signal Type for x(t):</label>
+            <select name="x_type" id="x_type" onchange="toggleFields()">
+                <option value="exp">Exponential</option>
+                <option value="sin">Sine</option>
+                <option value="cos">Cosine</option>
+                <option value="user">User-defined</option>
+            </select>
+
+            <div id="x_user_range" style="display: none;">
+                <label>x(t) Range (Only for 'user'):</label>
+                <input type="number" name="x_start" step="0.1" placeholder="Start (e.g., -2)">
+                <input type="number" name="x_end" step="0.1" placeholder="End (e.g., 2)">
+            </div>
+
+            <label for="y_type">Signal Type for y(t):</label>
+            <select name="y_type" id="y_type" onchange="toggleFields()">
+                <option value="exp">Exponential</option>
+                <option value="sin">Sine</option>
+                <option value="cos">Cosine</option>
+                <option value="user">User-defined</option>
+            </select>
+
+            <div id="y_user_range" style="display: none;">
+                <label>y(t) Range (Only for 'user'):</label>
+                <input type="number" name="y_start" step="0.1" placeholder="Start (e.g., -3)">
+                <input type="number" name="y_end" step="0.1" placeholder="End (e.g., 3)">
+            </div>
+
+            <label>Start Time (TS):</label>
+            <input type="number" name="t_start" step="0.1" value="-5">
+
+            <label>End Time (TE):</label>
+            <input type="number" name="t_end" step="0.1" value="5">
+
+            <button type="submit">Generate Plot</button>
+        </form>
+
+        {% if plot %}
+            <h2>Convolution Output</h2>
+            <img src="{{ url_for('static', filename='plot.png') }}" alt="Convolution Plot">
+        {% endif %}
+    </div>
+
+    <script>
+    function toggleFields() {
+        const xType = document.getElementById("x_type").value;
+        const yType = document.getElementById("y_type").value;
+
+        document.getElementById("x_user_range").style.display = (xType === "user") ? "block" : "none";
+        document.getElementById("y_user_range").style.display = (yType === "user") ? "block" : "none";
+    }
+    </script>
+</body>
+</html>
